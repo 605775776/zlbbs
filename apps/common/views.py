@@ -1,10 +1,10 @@
 #encoding: utf-8
 
 from flask import Blueprint,request,make_response
-from exts import alidayu
+# from exts import alidayu
 from utils import restful,zlcache
 from utils.captcha import Captcha
-from .forms import SMSCaptchaForm
+# from .forms import SMSCaptchaForm
 from utils.captcha import Captcha
 from io import BytesIO
 

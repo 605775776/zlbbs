@@ -5,11 +5,11 @@
 $(function(){
     $("#submit-btn").click(function (event) {
         event.preventDefault();
-        var telephone_input = $("input[name='telephone']");
+        var username_input = $("input[name='username']");
         var password_input = $("input[name='password']");
         var remember_input = $("input[name='remember']");
 
-        var telephone = telephone_input.val();
+        var telephone = username_input.val();
         var password = password_input.val();
         var remember = remember_input.checked ? 1 : 0;
 
@@ -17,7 +17,7 @@ $(function(){
         zlajax.post({
             'url': '/signin/',
             'data': {
-                'telephone': telephone,
+                'username': username,
                 'password': password,
                 'remember': remember
             },
