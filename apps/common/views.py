@@ -25,22 +25,22 @@ bp = Blueprint("common",__name__,url_prefix='/c')
 #         # return restful.params_error(message='短信验证码发送失败！')
 #         return restful.success()
 
-@bp.route('/sms_captcha/',methods=['POST'])
-def sms_captcha():
-    form = SMSCaptchaForm(request.form)
-    if form.validate():
-        telephone = form.telephone.data
-        captcha = Captcha.gene_text(number=4)
-        print('发送的短信验证码是：',captcha)
-        if alidayu.send_sms(telephone,code=captcha):
-            zlcache.set(telephone,captcha)
-            return restful.success()
-        else:
-            # return restful.params_error()
-            zlcache.set(telephone,captcha)
-            return restful.success()
-    else:
-        return restful.params_error(message='参数错误！')
+# @bp.route('/sms_captcha/',methods=['POST'])
+# def sms_captcha():
+#     form = SMSCaptchaForm(request.form)
+#     if form.validate():
+#         telephone = form.telephone.data
+#         captcha = Captcha.gene_text(number=4)
+#         print('发送的短信验证码是：',captcha)
+#         if alidayu.send_sms(telephone,code=captcha):
+#             zlcache.set(telephone,captcha)
+#             return restful.success()
+#         else:
+#             # return restful.params_error()
+#             zlcache.set(telephone,captcha)
+#             return restful.success()
+#     else:
+#         return restful.params_error(message='参数错误！')
 
 
 @bp.route('/captcha/')
