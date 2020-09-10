@@ -19,7 +19,7 @@ class GenderEnum(enum.Enum):
 class FrontUser(db.Model):
     __tablename__ = 'front_user'
     id = db.Column(db.String(100), primary_key=True, default=shortuuid.uuid)
-    telephone = db.Column(db.String(11), nullable=False, unique=True)
+    # telephone = db.Column(db.String(11), nullable=False, unique=True)
     username = db.Column(db.String(100), nullable=False)
     _password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), unique=True)
