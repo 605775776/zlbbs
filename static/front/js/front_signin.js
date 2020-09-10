@@ -1,6 +1,3 @@
-/**
- * Created by hynev on 2017/12/26.
- */
 
 $(function(){
     $("#submit-btn").click(function (event) {
@@ -9,7 +6,7 @@ $(function(){
         var password_input = $("input[name='password']");
         var remember_input = $("input[name='remember']");
 
-        var telephone = username_input.val();
+        var username = username_input.val();
         var password = password_input.val();
         var remember = remember_input.checked ? 1 : 0;
 

@@ -1,6 +1,3 @@
-/**
- * Created by Administrator on 2017/3/24.
- */
 
 var zlparam = {
     setParam: function (href,key,value) {

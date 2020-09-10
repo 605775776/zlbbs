@@ -36,6 +36,6 @@ class SignupForm(BaseForm):
                 raise ValidationError(message='图形验证码错误！')
 
 class SigninForm(BaseForm):
-    telephone = StringField(validators=[Regexp(r"1[345789]\d{9}", message='请输入正确格式的手机号码！')])
+    username = StringField(validators=[Regexp(r".{2,20}", message='请输入正确格式的用户名！')])
     password = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{6,20}", message='请输入正确格式的密码！')])
     remeber = StringField()
