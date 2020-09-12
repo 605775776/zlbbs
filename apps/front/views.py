@@ -11,6 +11,7 @@ from .forms import SignupForm
 from utils import restful
 from .models import FrontUser
 from exts import db
+from utils import safeutils
 
 bp = Blueprint('front', __name__)
 
@@ -21,7 +22,11 @@ def index():
 
 class SignupView(views.MethodView):
     def get(self):
-        return render_template('front/front_signup.html')
+        return_to = request.referrer
+        if return_to and return_to != request.url and safeutils.is_sage_url(return_to):
+            return render_template('front/front_signup.html', return_to=return_to)
+        else:
+            return render_template('front/front_signup.html')
 
     def post(self):
         form = SignupForm(request.form)
