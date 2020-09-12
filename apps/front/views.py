@@ -65,6 +65,7 @@ class SigninView(views.MethodView):
                 session[config.Front_USER_ID] = user.id
                 if remeber:
                     session.permanent = True
+                return restful.success()
             else:
                 return restful.params_error(message="用户名或密码错误")
         else:
