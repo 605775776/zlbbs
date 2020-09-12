@@ -74,4 +74,4 @@ class SigninView(views.MethodView):
 
 
 bp.add_url_rule('/signup/', view_func=SignupView.as_view('signup'))
-bp.add_url_rule('/signin/', view_func=SignupView.as_view('signin'))
+bp.add_url_rule('/signin/', view_func=SigninView.as_view('signin'))
