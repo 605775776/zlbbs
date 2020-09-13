@@ -13,7 +13,12 @@ from flask import (
     url_for,
     g,
     jsonify)
-from .forms import LoginForm, ResetpwdForm, ResetEmailForm, AddBannerForm
+from .forms import (
+    LoginForm,
+    ResetpwdForm,
+    ResetEmailForm,
+    AddBannerForm,
+    UpdateBannerForm)
 from .models import CMSUser, CMSPermission
 from ..models import BannerModel
 from .decorators import login_required, permission_required
@@ -77,7 +82,7 @@ def banners():
     banners = BannerModel.query.all()
     return render_template('cms/cms_banners.html', banners=banners)
 
-@bp.route('/abanner/', methods=['post'])
+@bp.route('/abanner/', methods=['POST'])
 @login_required
 def abanner():
     form = AddBannerForm(request.form)
@@ -93,6 +98,42 @@ def abanner():
     else:
         return restful.params_error(message=form.get_error())
 
+@bp.route('/ubanner/', methods=['POST'])
+@login_required
+def ubanner():
+    form = UpdateBannerForm(request.form)
+    if form.validate():
+        banner_id = form.banner_id.data
+        name = form.name.data
+        image_url = form.image_url.data
+        link_url = form.image_url.data
+        priority = form.priority.data
+        banner = BannerModel.query.get(banner_id)
+        if banner:
+            banner.name = name
+            banner.image_url = image_url
+            banner.link_url = link_url
+            banner.priority = priority
+            db.session.commit()
+            return restful.success()
+        else:
+            return restful.params_error(message="没有找到这个banner")
+    else:
+        return restful.params_error(message=form.get_error())
+@bp.route('/dbanner/', methods=['POST'])
+@login_required
+def dbanner():
+    banner_id = request.form.get('banner_id')
+    if not banner_id:
+        return restful.params_error(message="请传入轮播图id")
+
+    banner = BannerModel.query.get(banner_id)
+    if not banner:
+        return restful.params_error(message="没有找到这个轮播图")
+
+    db.session.delete(banner)
+    db.session.commit()
+    return restful.success()
 
 
 
