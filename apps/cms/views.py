@@ -77,7 +77,7 @@ def banners():
     banners = BannerModel.query.all()
     return render_template('cms/cms_banners.html', banners=banners)
 
-@bp.route('/abanners/', methods=['post'])
+@bp.route('/abanner/', methods=['post'])
 @login_required
 def abanner():
     form = AddBannerForm(request.form)
@@ -88,7 +88,7 @@ def abanner():
         priority = form.priority.data
         banner = BannerModel(name=name, image_url=image_url, link_url=link_url, priority=priority)
         db.session.add(banner)
-        db.commit()
+        db.session.commit()
         return restful.success()
     else:
         return restful.params_error(message=form.get_error())
