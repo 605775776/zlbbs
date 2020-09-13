@@ -4,6 +4,8 @@ from exts import db
 from zlbbs import create_app
 from apps.cms import models as cms_models
 from apps.front import models as front_models
+from apps import models as banner_models
+from apps.models import BannerModel
 
 app = create_app()
 CMSUser = cms_models.CMSUser
@@ -86,6 +88,9 @@ def test_permission():
         print("{} 拥有访问者权限".format(user))
     else:
         print("{} 没有访问者权限".format(user))
+
+
+
 
 
 if __name__ == '__main__':

@@ -112,7 +112,7 @@ class LoginView(views.MethodView):
             # return restful.params_error(form.get_error())
 
 
-@bp.route('/')
+@bp.route('/logout')
 @login_required
 def logout():
     del session[config.CMS_USER_ID]
