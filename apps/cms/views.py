@@ -13,8 +13,9 @@ from flask import (
     url_for,
     g,
     jsonify)
-from .forms import LoginForm, ResetpwdForm, ResetEmailForm
+from .forms import LoginForm, ResetpwdForm, ResetEmailForm, AddBannerForm
 from .models import CMSUser, CMSPermission
+from ..models import BannerModel
 from .decorators import login_required, permission_required
 import config
 from exts import db, mail
@@ -73,7 +74,24 @@ def croles():
 @bp.route('/banners/')
 @login_required
 def banners():
-    return render_template('cms/cms_banners.html')
+    banners = BannerModel.query.all()
+    return render_template('cms/cms_banners.html', banners=banners)
+
+@bp.route('/abanners/', methods=['post'])
+@login_required
+def abanner():
+    form = AddBannerForm(request.form)
+    if form.validate():
+        name = form.name.data
+        image_url = form.image_url.data
+        link_url = form.image_url.data
+        priority = form.priority.data
+        banner = BannerModel(name=name, image_url=image_url, link_url=link_url, priority=priority)
+        db.session.add(banner)
+        db.commit()
+        return restful.success()
+    else:
+        return restful.params_error(message=form.get_error())
 
 
 
