@@ -12,6 +12,7 @@ from flask import (
 from .forms import SignupForm, SigninForm
 from utils import restful
 from .models import FrontUser
+from ..models import BannerModel
 from exts import db
 from utils import safeutils
 import config
@@ -21,7 +22,9 @@ bp = Blueprint('front', __name__)
 
 @bp.route('/')
 def index():
-    return render_template('front/front_index.html')
+    banners = BannerModel.query.order_by(BannerModel.priority.desc()).limit(4)
+    context = {"banners": banners}
+    return render_template('front/front_index.html', **context)
 
 
 class SignupView(views.MethodView):

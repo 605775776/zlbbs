@@ -5,7 +5,7 @@ from zlbbs import create_app
 from apps.cms import models as cms_models
 from apps.front import models as front_models
 from apps import models as banner_models
-from apps.models import BannerModel
+from apps.models import BannerModel, BoardModel
 
 app = create_app()
 CMSUser = cms_models.CMSUser

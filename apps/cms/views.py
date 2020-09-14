@@ -18,9 +18,11 @@ from .forms import (
     ResetpwdForm,
     ResetEmailForm,
     AddBannerForm,
-    UpdateBannerForm)
+    UpdateBannerForm,
+    AddBoardForm,
+    UpdateBoardForm)
 from .models import CMSUser, CMSPermission
-from ..models import BannerModel
+from ..models import BannerModel, BoardModel
 from .decorators import login_required, permission_required
 import config
 from exts import db, mail
@@ -56,7 +58,64 @@ def comments():
 @login_required
 @permission_required(CMSPermission.BOARDER)
 def boards():
-    return render_template('cms/cms_boards.html')
+    board_models = BoardModel.query.all()
+    context = {
+        'boards': board_models
+    }
+    return render_template('cms/cms_boards.html', **context)
+
+@bp.route('/aboard/', methods=['POST'])
+@login_required
+@permission_required(CMSPermission.BOARDER)
+def aboard():
+    form = AddBoardForm(request.form)
+    if form.validate():
+        name = form.name.data
+        board = BoardModel(name=name)
+        db.session.add(board)
+        db.session.commit()
+        return restful.success()
+    else:
+        return restful.params_error(message=form.get_error())
+
+@bp.route('uboard', methods=['POST'])
+@login_required
+@permission_required(CMSPermission.BOARDER)
+def uboard():
+    form = UpdateBoardForm(request.form)
+
+    if form.validate():
+        board_id = form.board_id.data
+        name = form.name.data
+        board = BoardModel.query.get(board_id)
+        if board:
+            board.name = name
+            db.session.commit()
+            return restful.success()
+        else:
+            return restful.params_error(message="没有这个板块")
+    else:
+        return restful.params_error(message=form.get_error())
+
+
+@bp.route('dboard', methods=['POST'])
+@login_required
+@permission_required(CMSPermission.BOARDER)
+def dboard():
+    board_id = request.form.get('board_id')
+    if not board_id:
+        return restful.params_error(message="请输入板块id")
+
+    board = BoardModel.query.get(board_id)
+    if not board:
+        return restful.params_error(message="该板块不存在")
+
+    db.session.delete(board)
+    db.session.commit()
+    return restful.success()
+
+
+
 
 @bp.route('/fusers/')
 @login_required
@@ -79,7 +138,7 @@ def croles():
 @bp.route('/banners/')
 @login_required
 def banners():
-    banners = BannerModel.query.all()
+    banners = BannerModel.query.order_by(BannerModel.priority.desc()).all()
     return render_template('cms/cms_banners.html', banners=banners)
 
 @bp.route('/abanner/', methods=['POST'])
