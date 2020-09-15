@@ -12,7 +12,7 @@ from flask import (
 from .forms import SignupForm, SigninForm
 from utils import restful
 from .models import FrontUser
-from ..models import BannerModel
+from ..models import BannerModel, BoardModel
 from exts import db
 from utils import safeutils
 import config
@@ -23,7 +23,9 @@ bp = Blueprint('front', __name__)
 @bp.route('/')
 def index():
     banners = BannerModel.query.order_by(BannerModel.priority.desc()).limit(4)
-    context = {"banners": banners}
+    boards = BoardModel.query.all()
+    context = {"banners": banners,
+               "boards": boards}
     return render_template('front/front_index.html', **context)
 
 
