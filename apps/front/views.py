@@ -9,12 +9,13 @@ from flask import (
     session,
     request,
     url_for)
-from .forms import SignupForm, SigninForm
+from .forms import SignupForm, SigninForm, AddPostForm
 from utils import restful
 from .models import FrontUser
-from ..models import BannerModel, BoardModel
+from ..models import BannerModel, BoardModel, PostModel
 from exts import db
 from utils import safeutils
+from .decorators import login_required
 import config
 
 
@@ -27,6 +28,39 @@ def index():
     context = {"banners": banners,
                "boards": boards}
     return render_template('front/front_index.html', **context)
+
+
+@bp.route('/apost', methods=['GET', 'POST'])
+@login_required
+def apost():
+    if request.method == 'GET':
+        return render_template('front/front_apost.html')
+
+    else:
+        form = AddPostForm(request.form)
+        if form.validate():
+            title = form.title.data
+            content = form.content.data
+            board_id = form.board_id.data
+            board = BoardModel.query.get(board_id)
+            if not board:
+                return restful.params_error(message="板块id不存在")
+
+            post = PostModel(title=title, content=content)
+            post.board = board
+            db.session.add(post)
+            db.session.commit()
+            return restful.success()
+        else:
+            return restful.params_error(message=form.get_error())
+
+
+
+
+
+
+
+
 
 
 class SignupView(views.MethodView):

@@ -5,8 +5,8 @@
 #encoding: utf-8
 
 from ..forms import BaseForm
-from wtforms import StringField
-from wtforms.validators import Regexp,EqualTo,ValidationError
+from wtforms import StringField, IntegerField
+from wtforms.validators import Regexp,EqualTo,ValidationError, InputRequired
 from utils import zlcache
 
 class SignupForm(BaseForm):
@@ -39,3 +39,9 @@ class SigninForm(BaseForm):
     username = StringField(validators=[Regexp(r".{2,20}", message='请输入正确格式的用户名！')])
     password = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{6,20}", message='请输入正确格式的密码！')])
     remeber = StringField()
+
+
+class AddPostForm(BaseForm):
+    title = StringField(validators=[InputRequired(message="请输入帖子标题")])
+    content = StringField(validators=[InputRequired(message="请输入帖子内容")])
+    board_id = IntegerField(validators=[InputRequired(message="请输入板块id")])
