@@ -19,6 +19,6 @@ def login_required(func):
         if config.Front_USER_ID in session:
             return func(*args, **kwargs)
         else:
-            return redirect(url_for('cms.login'))
+            return redirect(url_for('front.signin'))
 
     return inner
