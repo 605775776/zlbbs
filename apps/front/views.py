@@ -30,7 +30,7 @@ def index():
     return render_template('front/front_index.html', **context)
 
 
-@bp.route('/apost', methods=['GET', 'POST'])
+@bp.route('/apost/', methods=['GET', 'POST'])
 @login_required
 def apost():
     if request.method == 'GET':

@@ -6,7 +6,7 @@ from .views import bp
 import config
 from flask import session, g
 from .models import FrontUser
-@bp.before_request()
+@bp.before_request
 def my_before_request():
 
     if config.Front_USER_ID in session:
