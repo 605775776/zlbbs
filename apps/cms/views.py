@@ -78,7 +78,7 @@ def aboard():
     else:
         return restful.params_error(message=form.get_error())
 
-@bp.route('uboard', methods=['POST'])
+@bp.route('/uboard/', methods=['POST'])
 @login_required
 @permission_required(CMSPermission.BOARDER)
 def uboard():
@@ -98,7 +98,7 @@ def uboard():
         return restful.params_error(message=form.get_error())
 
 
-@bp.route('dboard', methods=['POST'])
+@bp.route('/dboard/', methods=['POST'])
 @login_required
 @permission_required(CMSPermission.BOARDER)
 def dboard():
