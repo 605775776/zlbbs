@@ -148,7 +148,7 @@ def abanner():
     if form.validate():
         name = form.name.data
         image_url = form.image_url.data
-        link_url = form.image_url.data
+        link_url = form.link_url.data
         priority = form.priority.data
         banner = BannerModel(name=name, image_url=image_url, link_url=link_url, priority=priority)
         db.session.add(banner)
@@ -165,7 +165,7 @@ def ubanner():
         banner_id = form.banner_id.data
         name = form.name.data
         image_url = form.image_url.data
-        link_url = form.image_url.data
+        link_url = form.link_url.data
         priority = form.priority.data
         banner = BannerModel.query.get(banner_id)
         if banner:
