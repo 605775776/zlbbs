@@ -8,7 +8,8 @@ from flask import (
     render_template,
     session,
     request,
-    url_for)
+    url_for,
+    g)
 from .forms import SignupForm, SigninForm, AddPostForm
 from utils import restful
 from .models import FrontUser
@@ -34,7 +35,8 @@ def index():
 @login_required
 def apost():
     if request.method == 'GET':
-        return render_template('front/front_apost.html')
+        boards = BoardModel.query.all()
+        return render_template('front/front_apost.html',boards=boards)
 
     else:
         form = AddPostForm(request.form)
@@ -48,6 +50,7 @@ def apost():
 
             post = PostModel(title=title, content=content)
             post.board = board
+            post.author = g.front_user
             db.session.add(post)
             db.session.commit()
             return restful.success()
