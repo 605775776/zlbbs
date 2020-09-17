@@ -1,14 +1,16 @@
-#encoding: utf-8
+# encoding: utf-8
 
-from flask import Blueprint,request,make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify
 # from exts import alidayu
-from utils import restful,zlcache
+from utils import restful, zlcache
 from utils.captcha import Captcha
 # from .forms import SMSCaptchaForm
 from utils.captcha import Captcha
 from io import BytesIO
 import qiniu
-bp = Blueprint("common",__name__,url_prefix='/c')
+
+bp = Blueprint("common", __name__, url_prefix='/c')
+
 
 # @bp.route('/sms_captcha/')
 # def sms_captcha():
@@ -45,10 +47,10 @@ bp = Blueprint("common",__name__,url_prefix='/c')
 
 @bp.route('/captcha/')
 def graph_captcha():
-    text,image = Captcha.gene_graph_captcha()
-    zlcache.set(text.lower(),text.lower())
+    text, image = Captcha.gene_graph_captcha()
+    zlcache.set(text.lower(), text.lower())
     out = BytesIO()
-    image.save(out,'png')
+    image.save(out, 'png')
     out.seek(0)
     resp = make_response(out.read())
     resp.content_type = 'image/png'
@@ -57,10 +59,10 @@ def graph_captcha():
 
 @bp.route('/uptoken/')
 def uptoken():
-    access_key = 'M4zCEW4f9XPanbMN-Lb9O0S8j893f0e1ezAohFVL'
-    secret_key = '7BKV7HeEKM3NDJk8_l_C89JI3SMmeUlAIatzl9d4'
-    q = qiniu.Auth(access_key,secret_key)
+    access_key = 'A4rwmzix2yRTKQJerrGRxzMBV0qVk3fWkYJ-9H5C'
+    secret_key = 'hmrhR--FNC-TN0B4wqIbe6hS2p6w2ZdCTBEvd98t'
+    q = qiniu.Auth(access_key, secret_key)
 
-    bucket = 'hyvideo'
+    bucket = '605775776'
     token = q.upload_token(bucket)
-    return jsonify({'uptoken':token})
+    return jsonify({'uptoken': token})
