@@ -70,7 +70,7 @@ def add_user_to_role(email, name):
         print("%s没有该用户" % email)
 
 
-@manager.option('-t', '--telephone', dest='telephone')
+
 @manager.option('-u', '--username', dest='username')
 @manager.option('-p', '--password', dest='password')
 def create_front_user(username, password):
