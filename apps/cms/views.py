@@ -48,6 +48,10 @@ def index():
 def posts():
     return render_template('cms/cms_posts.html')
 
+
+
+
+
 @bp.route('/comments/')
 @login_required
 @permission_required(CMSPermission.COMMENTER)

@@ -9,7 +9,8 @@ from flask import (
     session,
     request,
     url_for,
-    g)
+    g,
+    abort)
 from .forms import SignupForm, SigninForm, AddPostForm
 from utils import restful
 from .models import FrontUser
@@ -51,6 +52,15 @@ def index():
                "pagination": pagination,
                "current_board": board_id}
     return render_template('front/front_index.html', **context)
+
+@bp.route('/p/<post_id>')
+def post_detail(post_id):
+    post = PostModel.query.get(post_id)
+    if not post:
+        abort(404)
+    return render_template('front/front_pdetail.html', post=post)
+
+
 
 
 @bp.route('/apost/', methods=['GET', 'POST'])
