@@ -13,7 +13,7 @@ class SignupForm(BaseForm):
     # telephone = StringField(validators=[Regexp(r"1[345789]\d{9}",message='请输入正确格式的手机号码！')])
     # sms_captcha = StringField(validators=[Regexp(r"\w{4}",message='请输入正确格式的短信验证码！')])
     username = StringField(validators=[Regexp(r".{2,20}",message='请输入正确格式的用户名！')])
-    password1 = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{6,20}",message='请输入正确格式的密码！')])
+    password1 = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{4,20}",message='请输入正确格式的密码！')])
     password2 = StringField(validators=[EqualTo("password1",message='两次输入的密码不一致！')])
     graph_captcha = StringField(validators=[Regexp(r"\w{4}",message='请输入正确格式的图形验证码！')])
 
@@ -37,7 +37,7 @@ class SignupForm(BaseForm):
 
 class SigninForm(BaseForm):
     username = StringField(validators=[Regexp(r".{2,20}", message='请输入正确格式的用户名！')])
-    password = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{6,20}", message='请输入正确格式的密码！')])
+    password = StringField(validators=[Regexp(r"[0-9a-zA-Z_\.]{4,20}", message='请输入正确格式的密码！')])
     remeber = StringField()
 
 

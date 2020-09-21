@@ -73,8 +73,8 @@ def add_user_to_role(email, name):
 @manager.option('-t', '--telephone', dest='telephone')
 @manager.option('-u', '--username', dest='username')
 @manager.option('-p', '--password', dest='password')
-def create_front_user(telephone, username, password):
-    user = FrontUser(telephone=telephone, username=username, password=password)
+def create_front_user(username, password):
+    user = FrontUser(username=username, password=password)
     db.session.add(user)
     db.session.commit()
     print("Front用户添加成功")
