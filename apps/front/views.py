@@ -17,6 +17,7 @@ from ..models import BannerModel, BoardModel, PostModel
 from exts import db
 from utils import safeutils
 from .decorators import login_required
+from flask_paginate import Pagination, get_page_parameter
 import config
 
 
@@ -24,12 +25,31 @@ bp = Blueprint('front', __name__)
 
 @bp.route('/')
 def index():
+    board_id = request.args.get('bd', type=int, default=None)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+
     banners = BannerModel.query.order_by(BannerModel.priority.desc()).limit(4)
     boards = BoardModel.query.all()
-    posts = PostModel.query.all()
+    # posts = PostModel.query.all()
+    start = (page-1)*config.PER_PAGE
+    end = start +config.PER_PAGE
+    post = None
+    total = 0
+    if board_id:
+        query_obj = PostModel.query.filter_by(board_id=board_id)
+        posts = query_obj.slice(start, end)
+        total = query_obj.count()
+        # posts = PostModel.query.filter_by(board_id=board_id).slice(start, end)
+        # total = PostModel.query.filter_by(board_id=board_id).count()
+    else:
+        posts = PostModel.query.slice(start, end)
+        total = PostModel.query.count()
+    pagination = Pagination(bs_version=3, page=page, total=total, outer_window=0, inner_window=2)
     context = {"banners": banners,
                "boards": boards,
-               "posts": posts}
+               "posts": posts,
+               "pagination": pagination,
+               "current_board": board_id}
     return render_template('front/front_index.html', **context)
 
 

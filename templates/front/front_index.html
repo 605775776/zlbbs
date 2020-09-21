@@ -75,6 +75,7 @@
                         <div class="post-info-group">
                             <p class="post-title">
 {#                                <a href="{{ url_for("front.post_detail",post_id=post.id) }}">{{ post.title }}</a>#}
+                                {{ post.title }}
                                 {% if post.highlight %}
                                     <span class="label label-danger">精华帖</span>
                                 {% endif %}
@@ -89,9 +90,9 @@
                     </li>
                 {% endfor %}
             </ul>
-{#            <div style="text-align:center;">#}
-{#                {{ pagination.links }}#}
-{#            </div>#}
+            <div style="text-align:center;">
+                {{ pagination.links }}
+            </div>
         </div>
         <div class="post-group">
             <ul class="post-group-head">
@@ -124,7 +125,8 @@
                         </div>
                         <div class="post-info-group">
                             <p class="post-title">
-                                <a href="{{ url_for("front.post_detail",post_id=post.id) }}">{{ post.title }}</a>
+{#                                <a href="{{ url_for("front.post_detail",post_id=post.id) }}">{{ post.title }}</a>#}
+                                {{ post.title }}
                                 {% if post.highlight %}
                                     <span class="label label-danger">精华帖</span>
                                 {% endif %}
@@ -139,9 +141,9 @@
                     </li>
                 {% endfor %}
             </ul>
-{#            <div style="text-align:center;">#}
-{#                {{ pagination.links }}#}
-{#            </div>#}
+            <div style="text-align:center;">
+                {{ pagination.links }}
+            </div>
         </div>
     </div>
     <div class="sm-container">
@@ -163,4 +165,5 @@
           {% endfor %}
         </div>
     </div>
+
 {% endblock %}

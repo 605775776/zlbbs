@@ -6,6 +6,7 @@ from apps.cms import models as cms_models
 from apps.front import models as front_models
 from apps import models as banner_models
 from apps.models import BannerModel, BoardModel
+from apps.models import PostModel
 
 app = create_app()
 CMSUser = cms_models.CMSUser
@@ -89,6 +90,19 @@ def test_permission():
     else:
         print("{} 没有访问者权限".format(user))
 
+@manager.command
+def create_test_post():
+    for x in range(1,200):
+        title = "标题:%s"%x
+        content = "内容:%s"%x
+        board = BoardModel.query.first()
+        author = FrontUser.query.first()
+        post = PostModel(title=title, content=content)
+        post.board = board
+        post.author = author
+        db.session.add(post)
+        db.session.commit()
+    print("测试帖子添加成功")
 
 
 
