@@ -14,11 +14,12 @@ from flask import (
 from .forms import SignupForm, SigninForm, AddPostForm, AddCommentForm
 from utils import restful
 from .models import FrontUser
-from ..models import BannerModel, BoardModel, PostModel, CommentModel
+from ..models import BannerModel, BoardModel, PostModel, CommentModel, HighlightPostModel
 from exts import db
 from utils import safeutils
 from .decorators import login_required
 from flask_paginate import Pagination, get_page_parameter
+from sqlalchemy.sql import func
 import config
 
 
@@ -28,6 +29,10 @@ bp = Blueprint('front', __name__)
 def index():
     board_id = request.args.get('bd', type=int, default=None)
     page = request.args.get(get_page_parameter(), type=int, default=1)
+    sort = request.args.get("st", type=int, default=1)
+
+
+
 
     banners = BannerModel.query.order_by(BannerModel.priority.desc()).limit(4)
     boards = BoardModel.query.all()
@@ -36,21 +41,40 @@ def index():
     end = start +config.PER_PAGE
     post = None
     total = 0
+    query_obj = None
+    if sort == 1:
+        query_obj = PostModel.query.order_by(PostModel.create_time.desc())
+    elif sort == 2 :
+        # 加精 倒序
+        query_obj =  db.session.query(PostModel).outerjoin(HighlightPostModel).order_by\
+        (HighlightPostModel.create_time.desc(), PostModel.create_time.desc())
+    elif sort == 3:
+        # 点赞数量
+        query_obj = PostModel.query.order_by(PostModel.create_time.desc())
+    elif sort == 4:
+        # 评论数量
+        query_obj = db.session.query(PostModel).outerjoin(CommentModel).\
+            group_by(PostModel.id).order_by(func.count(CommentModel.id).desc(), PostModel.create_time.desc())
+
+
     if board_id:
-        query_obj = PostModel.query.filter_by(board_id=board_id)
+        query_obj = query_obj.filter(PostModel.board_id==board_id)
         posts = query_obj.slice(start, end)
         total = query_obj.count()
         # posts = PostModel.query.filter_by(board_id=board_id).slice(start, end)
         # total = PostModel.query.filter_by(board_id=board_id).count()
     else:
-        posts = PostModel.query.slice(start, end)
-        total = PostModel.query.count()
+        # posts = PostModel.query.slice(start, end)
+        # total = PostModel.query.count()
+        posts = query_obj.slice(start, end)
+        total = query_obj.count()
     pagination = Pagination(bs_version=3, page=page, total=total, outer_window=0, inner_window=2)
     context = {"banners": banners,
                "boards": boards,
                "posts": posts,
                "pagination": pagination,
-               "current_board": board_id}
+               "current_board": board_id,
+               "current_sort": sort}
     return render_template('front/front_index.html', **context)
 
 @bp.route('/p/<post_id>')
@@ -123,6 +147,7 @@ def apost():
 class SignupView(views.MethodView):
     def get(self):
         return_to = request.referrer
+        print(return_to)
         if return_to and return_to != request.url and safeutils.is_safe_url(return_to):
             return render_template('front/front_signup.html', return_to=return_to)
         else:
@@ -145,6 +170,8 @@ class SignupView(views.MethodView):
 class SigninView(views.MethodView):
     def get(self):
         return_to = request.referrer
+        print("登录页面")
+        print(return_to)
         if return_to and return_to != request.url and return_to != url_for('front.signup') and safeutils.is_safe_url(return_to):
             return render_template('front/front_signin.html', return_to=return_to)
         else:

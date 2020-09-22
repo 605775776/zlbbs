@@ -51,9 +51,9 @@ def posts():
     # }
     # return render_template('cms/cms_posts.html', **context)
     post_list = PostModel.query.all()
-    return render_template('cms/cms_post.html', posts=post_list)
+    return render_template('cms/cms_posts.html', posts=post_list)
 
-@bp.route('hpost', methods=['POST'])
+@bp.route('/hpost/', methods=['POST'])
 @login_required
 @permission_required(CMSPermission.POSTER)
 def hpost():

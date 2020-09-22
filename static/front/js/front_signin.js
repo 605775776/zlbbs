@@ -22,7 +22,13 @@ $(function(){
                 if(data['code'] == 200){
                     var return_to = $("#return-to-span").text();
                     if(return_to){
-                        window.location = return_to;
+                        if (return_to === "http://127.0.0.1:5000/signup/"){
+                            console.log("???")
+                            window.location = '/'
+                        }else{
+                            window.location = return_to;
+                            console.log("!!!")
+                        }
                     }else{
                         window.location = '/';
                     }
