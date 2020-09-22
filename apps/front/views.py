@@ -11,10 +11,10 @@ from flask import (
     url_for,
     g,
     abort)
-from .forms import SignupForm, SigninForm, AddPostForm
+from .forms import SignupForm, SigninForm, AddPostForm, AddCommentForm
 from utils import restful
 from .models import FrontUser
-from ..models import BannerModel, BoardModel, PostModel
+from ..models import BannerModel, BoardModel, PostModel, CommentModel
 from exts import db
 from utils import safeutils
 from .decorators import login_required
@@ -56,9 +56,31 @@ def index():
 @bp.route('/p/<post_id>')
 def post_detail(post_id):
     post = PostModel.query.get(post_id)
+    # comments = CommentModel.query.all()
     if not post:
         abort(404)
     return render_template('front/front_pdetail.html', post=post)
+
+
+@bp.route('/acomment/', method=['POST'])
+@login_required
+def add_comment():
+    form = AddCommentForm(request.form)
+    if form.validate():
+        content = form.content.data
+        post_id = form.post_id.data
+        post = PostModel.query.get(post_id)
+        if post:
+            comment = CommentModel(content=content)
+            comment.post = post
+            comment.author = g.front_user
+            db.session.add(comment)
+            db.session.commit()
+            return restful.success()
+        else:
+            return restful.params_error("没有这篇帖子")
+    else:
+        return restful.params_error(form.get_error())
 
 
 
