@@ -28,6 +28,7 @@ import config
 from exts import db, mail
 from utils import restful, zlcache
 from flask_mail import Message
+from tasks import send_mail
 
 import string
 import random
@@ -344,14 +345,15 @@ def email_captcha():
     captcha = "".join(random.sample(source, 6))
 
     # 发送邮件
-    message = Message('python论坛邮箱修改验证码',
-                          recipients=[email],
-                          body="您的验证码是:%s" % captcha)
-    try:
-        mail.send(message)
-    except:
-        return restful.server_error()
-
+    # message = Message('python论坛邮箱修改验证码',
+    #                       recipients=[email],
+    #                       body="您的验证码是:%s" % captcha)
+    # try:
+    #     mail.send(message)
+    # except:
+    #     return restful.server_error()
+    # 异步
+    send_mail.delay('python论坛邮箱修改验证码', [email], "您的验证码是:%s" % captcha)
     zlcache.set(email, captcha)
     return restful.success()
 
